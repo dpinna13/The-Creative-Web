@@ -1,3 +1,6 @@
-### Classes
+### Assignments
 
-[Class 1](https://github.com/BarakChamo/The-Creative-Web/tree/master/classes/class%201)
+//TODO fix links
+[Class 1]()
+[Class 2]()
+[Class 3]()
