@@ -83,17 +83,17 @@ function init() {
     for (var i = 0; i < 4; i++) {
         cube = createCube(1, 1, 1, "#2d00b3");
         scene.add(cube);
-        cube.geometry.translate(Math.floor(Math.random() * 10) + 7, 0, 0);
+        cube.translateX(Math.floor(Math.random() * 10) + 7);
     }
 
     cubeA = createCube(1, 1, 1, "#33cc59");
-    cubeA.geometry.translate(5, 0, 0);
+    cubeA.translateX(5);
 
     cubeB = createCube(1, 1, 1, "#cc3333");
-    cubeB.geometry.translate(0, 0, 7);
+    cubeB.translateZ(7);
 
     cubeC = createCube(2, 2, 2, "#ffc34d");
-    cubeC.geometry.translate(9, 0, 0);
+    cubeC.translateX(9);
 
     cube = createCube(3, 3, 3, "#b366ff");
     scene.add(cube, cubeA, cubeB, cubeC);
@@ -126,8 +126,7 @@ function render() {
         // Extract intersected objects (from a particular scene or parent Object3D)
         var intersections = raycaster.intersectObjects(scene.children);
         // Log all intersections
-        console.log(intersections)
-            // Map intersected meshes to the hits array
+        // Map intersected meshes to the hits array
         hits = intersections.map(intersection => intersection.object)
     }
 
@@ -160,7 +159,6 @@ function render() {
         // Check if current mesh is hit by the raycast
         if (hits.includes(object3d)) {
             object3d.scale.set(1.2, 1.2, 1.2)
-            console.log("hit")
         } else {
             object3d.scale.set(1, 1, 1)
                 // console.log("not hit")
@@ -173,18 +171,16 @@ function render() {
 }
 
 
-window.addEventListener('mousemove', function(event) {
+window.addEventListener('pointermove', function(event) {
     // calculate mouse position in normalized device coordinates
     // (-1 to +1) for both components
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     // console.log("X " + mouse.x);
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 })
-window.addEventListener('mousedown', function(event) {
+window.addEventListener('pointerdown', function(event) {
     shouldRaycast = true;
-    console.log("Raycast = True");
 })
-window.addEventListener('mouseup', function(event) {
+window.addEventListener('pointerup', function(event) {
     shouldRaycast = false;
-    console.log("Raycast = False");
 });
