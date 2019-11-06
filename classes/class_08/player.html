@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Experiment with webmed</title>
+
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
+    <script src="https://unpkg.com/tone"></script>
+    <script src="https://unpkg.com/@tonejs/ui"></script>
+    <script src="webmidi.js"></script>
+</head>
+
+<body>
+    <tone-demo autoplay>
+        <tone-play-toggle></tone-play-toggle>
+        <tone-player></tone-player>
+    </tone-demo>
+
+    <script>
+        var play = false
+        var play1 = false
+        var play2 = false
+            // Create a new Player with a URL to a public MP3 file
+        const player = new Tone.Player('https://freesound.org/data/previews/489/489458_4397472-lq.mp3',
+            (arg) => {
+                console.log('Loaded first!')
+            }).toMaster()
+
+        // Load again the first file and we can use it separately
+        const player2 = new Tone.Player('https://freesound.org/data/previews/489/489458_4397472-lq.mp3',
+                (arg) => {
+                    console.log('Loaded first!')
+                }).toMaster()
+            // Add an additional file to the player
+        const second = new Tone.Player('https://freesound.org/data/previews/489/489788_7037-lq.mp3',
+            (arg) => {
+                console.log('Loaded second!')
+            }).toMaster()
+
+        // Set the player to autostart once the file is loaded
+        player.autostart = false
+        player2.autostart = false
+        second.autostart = false
+
+        // set the player to loop
+        player.loop = true
+        player2.loop = true
+        second.loop = true;
+
+        // set the player to play back at double speed
+        player.playbackRate = 2
+        player2.playbackRate = 2
+        second.playbackRate = 2
+
+        // Set player loop points
+        player.setLoopPoints(0.5, 2)
+        second.setLoopPoints(3, 5)
+        player2.setLoopPoints(5.5, 7)
+
+        //bind the interface
+        document.querySelector("tone-play-toggle").bind(player);
+        document.querySelector("tone-player").bind(player);
+
+        /* Tone.js Setup */
+        const synth = new Tone.Synth()
+        const filter = new Tone.AutoFilter().start()
+
+        synth.chain(filter, Tone.Master)
+
+        /* Setup WebMIDI */
+        WebMidi.enable(function(err) {
+            if (err) console.log("An error occurred", err);
+            WebMidi.inputs[0].addListener("controlchange", "all", function(e) {
+
+                //First dial top-left
+                if (e.controller.number === 0 && e.value >= 125 && play == false) {
+                    play = true;
+                    console.log("start player")
+                    player.start();
+                } else if (e.controller.number === 0 && play == true) {
+                    play = false;
+                    console.log("stop player")
+                    player.stop();
+                }
+                //Second dial top-left
+                if (e.controller.number === 1 && e.value >= 125 && play1 == false) {
+                    play1 = true;
+                    console.log("start second")
+                    second.start();
+                } else if (e.controller.number === 1 && play1 == true) {
+                    play1 = false;
+                    console.log("stop second")
+                    second.stop();
+                };
+
+                //Third dial top-left
+                if (e.controller.number === 2 && play2 == false) {
+                    play2 = true;
+                    console.log("start player")
+                    player2.start();
+                } else if (e.controller.number === 2 && play2 == true) {
+                    play2 = false;
+                    console.log("stop player")
+                    player2.stop();
+                };
+
+                //First dial bottom-left
+                if (e.controller.number === 12) {
+                    player.setLoopPoints(e.value, e.value + 5)
+                }
+                //Second dial bottom-left
+                if (e.controller.number === 13) {
+                    second.setLoopPoints(e.value, e.value + 5)
+                }
+                //Third dial bottom-left
+                if (e.controller.number === 14) {
+                    player2.setLoopPoints(e.value, e.value + 5)
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
