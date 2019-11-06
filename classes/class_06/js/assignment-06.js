@@ -220,7 +220,7 @@ function init() {
     var sound4 = new THREE.PositionalAudio(listener);
     var oscillator = listener.context.createOscillator();
     oscillator.type = 'sine';
-    oscillator.frequency.setValueAtTime(1328, sound4.context.currentTime);
+    oscillator.frequency.setValueAtTime(2328, sound4.context.currentTime);
     oscillator.start(0);
     sound4.setNodeSource(oscillator);
     sound4.setRefDistance(10);

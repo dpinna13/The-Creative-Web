@@ -13,6 +13,7 @@ var analyser1, analyser2, analyser3;
 var clock = new THREE.Clock();
 
 var startButton = document.getElementById('startButton');
+
 startButton.addEventListener('click', init);
 
 function init() {
