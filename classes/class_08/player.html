@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Experiment with webmed</title>
+    <title>Document</title>
 
     <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
     <script src="https://unpkg.com/tone"></script>
@@ -14,11 +14,15 @@
 </head>
 
 <body>
+
+    <span class="cc">CC</span>
+    <br/>
+    <br/>
+    <span class="note">NOTE</span>
     <tone-demo autoplay>
         <tone-play-toggle></tone-play-toggle>
         <tone-player></tone-player>
     </tone-demo>
-
     <script>
         var play = false
         var play1 = false
@@ -29,12 +33,12 @@
                 console.log('Loaded first!')
             }).toMaster()
 
-        // Load again the first file and we can use it separately
         const player2 = new Tone.Player('https://freesound.org/data/previews/489/489458_4397472-lq.mp3',
-                (arg) => {
-                    console.log('Loaded first!')
-                }).toMaster()
-            // Add an additional file to the player
+            (arg) => {
+                console.log('Loaded first!')
+            }).toMaster()
+
+
         const second = new Tone.Player('https://freesound.org/data/previews/489/489788_7037-lq.mp3',
             (arg) => {
                 console.log('Loaded second!')
@@ -61,8 +65,11 @@
         player2.setLoopPoints(5.5, 7)
 
         //bind the interface
-        document.querySelector("tone-play-toggle").bind(player);
         document.querySelector("tone-player").bind(player);
+        document.querySelector("tone-play-toggle").bind(player);
+
+        const cc = document.getElementsByClassName('cc')[0]
+        const note = document.getElementsByClassName('note')[0]
 
         /* Tone.js Setup */
         const synth = new Tone.Synth()
@@ -73,9 +80,12 @@
         /* Setup WebMIDI */
         WebMidi.enable(function(err) {
             if (err) console.log("An error occurred", err);
-            WebMidi.inputs[0].addListener("controlchange", "all", function(e) {
 
-                //First dial top-left
+            console.log(WebMidi.inputs)
+            WebMidi.inputs[0].addListener("controlchange", "all", function(e) {
+                cc.innerHTML = `Controller: ${e.controller.number} Value: ${e.value}`
+
+                console.log(e.controller.number);
                 if (e.controller.number === 0 && e.value >= 125 && play == false) {
                     play = true;
                     console.log("start player")
@@ -85,8 +95,8 @@
                     console.log("stop player")
                     player.stop();
                 }
-                //Second dial top-left
-                if (e.controller.number === 1 && e.value >= 125 && play1 == false) {
+
+                if (e.controller.number === 1 && play1 == false) {
                     play1 = true;
                     console.log("start second")
                     second.start();
@@ -96,29 +106,38 @@
                     second.stop();
                 };
 
-                //Third dial top-left
                 if (e.controller.number === 2 && play2 == false) {
                     play2 = true;
-                    console.log("start player")
+                    console.log("start second")
                     player2.start();
                 } else if (e.controller.number === 2 && play2 == true) {
                     play2 = false;
-                    console.log("stop player")
+                    console.log("stop second")
                     player2.stop();
                 };
 
-                //First dial bottom-left
                 if (e.controller.number === 12) {
                     player.setLoopPoints(e.value, e.value + 5)
                 }
-                //Second dial bottom-left
+
                 if (e.controller.number === 13) {
                     second.setLoopPoints(e.value, e.value + 5)
                 }
-                //Third dial bottom-left
+
                 if (e.controller.number === 14) {
                     player2.setLoopPoints(e.value, e.value + 5)
                 }
+
+            });
+
+            WebMidi.inputs[0].addListener("noteon", "all", function(e) {
+                note.innerHTML = `NOTE ON - Name: ${e.note.name} Octave: ${e.note.octave}`
+                synth.triggerAttack(e.note.name + e.note.octave)
+            });
+
+            WebMidi.inputs[0].addListener("noteoff", "all", function(e) {
+                note.innerHTML = `NOTE OFF - Name: ${e.note.name} Octave: ${e.note.octave}`
+                synth.triggerRelease()
             });
         });
     </script>
