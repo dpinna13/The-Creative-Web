@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>WebRTC/PeerJS Room play</title>
+    <style>
+        .wrapper {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            z-index: 1000;
+            color: white !important;
+        }
+        
+        #display {
+            color: #333333 !important;
+            background-color: whitesmoke;
+            padding: 16px;
+            margin-top: 32px;
+            overflow-y: auto;
+            height: 400px !important;
+        }
+        
+        video {
+            width: 300px;
+            object-fit: contain;
+        }
+        
+        #videos {
+            position: absolute;
+            left: 500%;
+            height: 500%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <input type="text" placeholder="Youd ID" id="uid">
+        <button id="call" onclick="connect(document.getElementById('uid').value)">Init peer.js</button>
+        <br/>
+        <br/>
+
+        <input type="text" placeholder="Peer ID" id="id">
+        <button id="call" onclick="callPeer(document.getElementById('id').value)">Call Peer</button>
+        <br/>
+        <br/>
+
+        <input type="text" placeholder="Send message" id="message">
+        <button id="message" onclick="sendMessage(document.getElementById('message').value)">Send Message</button>
+        <br/>
+        <br/>
+
+        <button id="volume" onclick="setVolumeTo(-100)">Set Volume to -100db</button>
+        <button id="volume" onclick="setVolumeTo(-10)">Set Volume to -10db</button>
+
+        <button id="volume" onclick="changeInstrument('polySynth')">Play polySynth</button>
+
+
+
+        <div id="display"></div>
+
+    </div>
+
+    <tone-demo autoplay>
+        <tone-keyboard octaves="3" polyphonic="true"></tone-keyboard>
+    </tone-demo>
+
+
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.0.4/peerjs.min.js"></script>
+
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
+    <script src="https://unpkg.com/tone"></script>
+    <script src="https://unpkg.com/@tonejs/ui"></script>
+
+    <script src="webmidi.js"></script>
+    <script src="./call-peer.js"></script>
+
+    <script src="jamsession.js"></script>
+
+    <script>
+        function changeInstrument(newInstrument) {
+            instrument = newInstrument
+            console.log("change instrument to " + newInstrument)
+        }
+    </script>
+
+</body>
+
+</html>`
