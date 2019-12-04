@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>WebRTC/PeerJS Room play</title>
+    <title>WebRTC/PeerJS Jam Session play</title>
     <style>
         .wrapper {
             position: absolute;
@@ -19,6 +19,7 @@
             margin-top: 32px;
             overflow-y: auto;
             height: 400px !important;
+            width: 350px !important;
         }
         
         video {
@@ -36,7 +37,7 @@
 
 <body>
     <div class="wrapper">
-        <input type="text" placeholder="Youd ID" id="uid">
+        <input type="text " placeholder="Youd ID" id="uid">
         <button id="call" onclick="connect(document.getElementById('uid').value)">Init peer.js</button>
         <br/>
         <br/>
@@ -51,14 +52,21 @@
         <br/>
         <br/>
 
-        <button id="volume" onclick="setVolumeTo(-100)">Set Volume to -100db</button>
-        <button id="volume" onclick="setVolumeTo(-10)">Set Volume to -10db</button>
+        <div style="margin-bottom: 16px;">
+            <button id="volume" onclick="setVolumeTo(-100)">Set Volume to -100db</button>
+            <button id="volume" onclick="setVolumeTo(-10)">Set Volume to -10db</button>
 
-        <button id="volume" onclick="changeInstrument('polySynth')">Play polySynth</button>
+        </div>
+        <div>
 
+            <button id="volume" onclick="changeInstrument('polySynth')">Play polySynth</button>
 
+            <button id="beat" onclick="startBeats()">Start Beats</button>
+            <button id="beat" onclick="stopBeats()">Stop Beats</button>
 
+        </div>
         <div id="display"></div>
+
 
     </div>
 
@@ -69,22 +77,12 @@
 
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.0.4/peerjs.min.js"></script>
-
     <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
     <script src="https://unpkg.com/tone"></script>
     <script src="https://unpkg.com/@tonejs/ui"></script>
-
-    <script src="webmidi.js"></script>
-    <script src="./call-peer.js"></script>
-
-    <script src="jamsession.js"></script>
-
-    <script>
-        function changeInstrument(newInstrument) {
-            instrument = newInstrument
-            console.log("change instrument to " + newInstrument)
-        }
-    </script>
+    <script src="js/webmidi.js"></script>
+    <script src="js/call-peer.js"></script>
+    <script src="js/jamsession.js"></script>
 
 </body>
 

@@ -92,8 +92,8 @@ function callPeer(peerId) {
     // Create new media stream
     if (myStream) {
         peer.outgoing = me.call(peerId, myStream)
-
-        // handle errors
+        display('Connected with ' + peerId)
+            // handle errors
         peer.outgoing.on('error', function(err) {
             display(err)
         })
@@ -107,6 +107,7 @@ function callPeer(peerId) {
                 // call back with stream
             if (peerMediaCallback) peerMediaCallback(stream, peerId)
         })
+
     }
 
 
@@ -144,13 +145,13 @@ function connectToGroup(group) {
 }
 
 function sendMessage(message, peerId) {
-    if (peerId) {
-        // send message to specified peer
-        peers[peerId] && peers[peerId].dataChannel && peers[peerId].dataChannel.send(message)
-    } else {
-        // send message to all peers
-        Object.values(peers).forEach(peer => peer.dataChannel.send(message))
-    }
+    // if (peerId) {
+    //     // send message to specified peer
+    //     peers[peerId] && peers[peerId].dataChannel && peers[peerId].dataChannel.send(message)
+    // } else {
+    // send message to all peers
+    Object.values(peers).forEach(peer => peer.dataChannel.send(message))
+        // }
 }
 
 // When someone initiates a call via PeerJS
@@ -220,5 +221,4 @@ function sendNote(message) {
 
 function play(message) {
     synth.triggerAttack(message)
-    console.log("Playing: " + message)
 }
