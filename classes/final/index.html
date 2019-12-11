@@ -2,7 +2,11 @@
 <html>
 
 <head>
-    <title>WebRTC/PeerJS Jam Session play</title>
+    <title>Jam Session play</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <style>
         .wrapper {
             position: absolute;
@@ -16,75 +20,148 @@
             color: #333333 !important;
             background-color: whitesmoke;
             padding: 16px;
-            margin-top: 32px;
             overflow-y: auto;
             height: 400px !important;
-            width: 350px !important;
+            width: 300px !important;
         }
         
-        video {
-            width: 300px;
-            object-fit: contain;
+        .dot {
+            height: 14px;
+            width: 14px;
+            background-color: #32cd32;
+            border-radius: 50%;
+            display: inline-block;
+            vertical-align: text-top;
         }
         
-        #videos {
-            position: absolute;
-            left: 500%;
-            height: 500%;
+        .status {
+            display: inline-block;
+            margin-left: 4px;
+        }
+        
+        #connected {
+            padding-top: 10px;
+        }
+        
+        input[type=search]::-webkit-search-cancel-button {
+            -webkit-appearance: searchfield-cancel-button;
+        }
+        
+        label {
+            display: block;
         }
     </style>
 </head>
 
 <body>
-    <div class="wrapper">
-        <input type="text " placeholder="Youd ID" id="uid">
-        <button id="call" onclick="connect(document.getElementById('uid').value)">Init peer.js</button>
-        <br/>
-        <br/>
+    <header>
+        <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light">
+            <a class="navbar-brand ml-5" href="#">JamSession</a>
+            <div class="d-flex justify-content-end ml-auto" style="margin-right:12em;">
+                <div class="p-1">
+                    <div class="form-inline my-2 my-lg-0" id="username">
+                        <input type="text " class="form-control mr-sm-2" placeholder="Youd ID" id="uid">
+                        <button id="call" class="btn btn-outline-success my-2 my-sm-0" onclick="connect(document.getElementById('uid').value)">Set Username</button>
+                    </div>
+                    <div id="connected" class="d-none">
+                        <span class="dot"></span><span class="status">Connected as </span>
+                    </div>
+                </div>
+                <div class="p-1">
+                    <div class="form-inline my-2 my-lg-0">
+                        <input type="search" class="form-control mr-sm-2" placeholder="Peer ID" id="id">
+                        <button id="call" class="btn btn-outline-success my-2 my-sm-0" onclick="callPeer(document.getElementById('id').value)">Call Peer</button>
+                    </div>
+                </div>
+            </div>
 
-        <input type="text" placeholder="Peer ID" id="id">
-        <button id="call" onclick="callPeer(document.getElementById('id').value)">Call Peer</button>
-        <br/>
-        <br/>
+            <tone-top-bar>
+                <tone-unmute mute></tone-unmute>
+            </tone-top-bar>
+        </nav>
 
-        <input type="text" placeholder="Send message" id="message">
-        <button id="message" onclick="sendMessage(document.getElementById('message').value)">Send Message</button>
-        <br/>
-        <br/>
+    </header>
+    <main role="main">
+        <div class="container" style="margin-top:6em;">
+            <div class="row mb-5">
+                <div class="col-4">
+                    <div id="display"></div>
+                </div>
+                <div class="col-8">
+                    <div class="row">
 
-        <div style="margin-bottom: 16px;">
-            <button id="volume" onclick="setVolumeTo(-100)">Set Volume to -100db</button>
-            <button id="volume" onclick="setVolumeTo(-10)">Set Volume to -10db</button>
+                        <div class="col-8" id="controls">
+                            <label for="select_id">Switch Instrument</label>
+                            <select onchange="read_value()" class="custom-select" id="select_id">
+                        <option value="mono">Mono Synth</option>
+                        <option value="piano">Piano</option>
+                        <option value="bass">Bass</option>
+                        <option value="synth">Synth</option>
+                        <option value="fmSynth">fmSynth</option>
+                        <option value="polySynth">polySynth</option>
+                    </select>
+                        </div>
+                        <div class="col-4" id="controls">
+                            <div>
+                                <label for="play-beat">Play Beats:</label>
+                                <button class="btn btn-outline-secondary" id="play-beat" onclick="startLocalBeats()">
+                            <svg class="bi bi-play-fill" width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13.596 10.697l-6.363 3.692c-.54.313-1.233-.066-1.233-.697V6.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 010 1.393z"></path>
+                            </svg>
+                        </button>
+                                <button class="btn btn-secondary" id="stop-beat" onclick="stopLocalBeats()">
+                            <svg class="bi bi-stop-fill" width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M7 5.5h6A1.5 1.5 0 0114.5 7v6a1.5 1.5 0 01-1.5 1.5H7A1.5 1.5 0 015.5 13V7A1.5 1.5 0 017 5.5z"></path>
+                            </svg>
+                        </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-5">
+                        <div class="col-12 " id="keyboard" style="margin: auto;">
+                            <tone-keyboard octaves="4" polyphonic="true"></tone-keyboard>
+                        </div>
+                    </div>
+                </div>
 
+            </div>
+
+            <!-- <div class="row">
+                <div class="d-flex justify-content-center" style="margin: auto;">
+                    <div id="tracks">
+                        <tone-channel label="Bass" id="bass"></tone-channel>
+                        <tone-channel label="Chords" id="chords"></tone-channel>
+                        <tone-channel label="Drone" id="drone"></tone-channel>
+                        <tone-channel label="Kick" id="kick"></tone-channel>
+                        <tone-channel label="Snare" id="snare"></tone-channel>
+                    </div>
+                    <tone-play-toggle></tone-play-toggle>
+                </div>
+            </div> -->
         </div>
-        <div>
-
-            <button id="volume" onclick="changeInstrument('polySynth')">Play polySynth</button>
-
-            <button id="beat" onclick="startLocalBeats()">Start Beats</button>
-            <button id="beat" onclick="stopLocalBeats()">Stop Beats</button>
-
-        </div>
-        <div id="display"></div>
+    </main>
 
 
-    </div>
 
-    <div>
-        <tone-demo autoplay>
-            <tone-keyboard octaves="3" polyphonic="true"></tone-keyboard>
-        </tone-demo>
-    </div>
+    <footer class="footer mt-auto py-3">
 
-    </div>
+        <tone-demo autoplay></tone-demo>
+
+    </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.0.4/peerjs.min.js"></script>
     <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
     <script src="https://unpkg.com/tone"></script>
-    <script src="js/tonejs.ui.js"></script>
-    <script src="js/webmidi.js"></script>
+    <script src="js/vendor/tonejs.ui.js"></script>
+    <script src="js/vendor/webmidi.js"></script>
     <script src="js/call-peer.js"></script>
     <script src="js/jamsession.js"></script>
-
+    <script src="js/mixer.js"></script>
+    <script>
+        function read_value() {
+            d = document.getElementById("select_id").value;
+            changeInstrument(d);
+        }
+    </script>
 </body>
 
-</html>`
+</html>

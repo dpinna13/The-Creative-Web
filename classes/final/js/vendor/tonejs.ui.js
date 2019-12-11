@@ -1,4 +1,4 @@
-! function(t) {
+/* eslint-disable */ ! function(t) {
     var e = {};
 
     function n(i) { if (e[i]) return e[i].exports; var o = e[i] = { i: i, l: !1, exports: {} }; return t[i].call(o.exports, o, o.exports, n), o.l = !0, o.exports }
@@ -5173,7 +5173,7 @@
 				:host {
 					display: inline-block;
 					min-width: 80px;
-					width: 100%;
+					max-width: 464px;
 				}
 
 				#container {
@@ -5254,7 +5254,8 @@
 				the audio file's waveform
 			</canvas>
 			<div id="loading" ?hidden=${!this.loading} style="color: ${this.color}">loading</div>
-		`}});customElements.define("tone-player",class extends o.a{static get properties(){return{label:{type:String},duration:{type:Number}}}constructor(){super(),this.label="Player",this.duration=0}bind(t){const e=setInterval(()=>{t.loaded&&(clearInterval(e),this.duration=t.buffer.duration,this.sync(t))},100);super.bind(t)}render(){return i.b`
+		`}});
+        customElements.define("tone-player",class extends o.a{static get properties(){return{label:{type:String},duration:{type:Number}}}constructor(){super(),this.label="Player",this.duration=0}bind(t){const e=setInterval(()=>{t.loaded&&(clearInterval(e),this.duration=t.buffer.duration,this.sync(t))},100);super.bind(t)}render(){return i.b`
 			<style>
 				:host {
 					display: block;
@@ -5739,7 +5740,7 @@
 				#container {
 					display: flex;
 					background-color: white;
-					height: 80px;
+					height: 100px;
 				}
 
 				tone-keyboard-octave {
@@ -6872,13 +6873,13 @@
 					padding: 5px;
 				}
 				tone-play-toggle {
-					width: 50%;
+					max-width: 464px !;
 				}
 				#top {
 					position: relative;
 				}
 				#top tone-play-toggle {
-					width: 60%;
+					max-width: 464px;
 				}
 				#top #position {
 					background-color: white;
@@ -7092,41 +7093,17 @@
 		`}});customElements.define("tone-top-bar",class extends i.a{constructor(){super()}updated(){const t=this.shadowRoot.querySelector("canvas");t.width=2*t.clientWidth,t.width=2*t.clientHeight;const{width:e,height:n}=t,i=t.getContext("2d"),o=function(t){const e=new Array(t),n=new Array(t),i=new Array(t),o=new Array(t),r=[e,i,o,n];for(let n=0;n<t;n++)e[n]=Math.sin(2*Math.PI*n/t);for(let e=0;e<t;e++)i[e]=(e+t/2)%t/t*2-1;for(let e=0;e<t;e++)o[e]=e<t/3?e/(t/3)*2-1:e<2*t/3?2*(1-(e-t/3)/(t/3))-1:(e-2*t/3)/(t/3)*2-1;for(let e=0;e<t;e++){const i=t/16;n[e]=e<i?-1:e<t/2?1:e<t-i?-1:1}return r[Math.floor(Math.random()*r.length)]}(e+1);i.beginPath(),o.forEach((t,e)=>{const o=Math.scale(t,-1,1,.25*n,.75*n);0===e?i.moveTo(e,o):i.lineTo(e,o)}),i.lineTo(e,n),i.lineTo(0,n),i.fillStyle="#22DBC0",i.fill()}render(){return i.b`
 			<style>
 
-				:host {
-					display: block;
-					height: 44px;
-					width: 100%;
-				}
+				// :host {
+				// 	display: block;
+				// 	height: 44px;
+				// 	width: 100%;
+				// }
 
-				#container {
-					background-color: black;
-					width: 100%;
-					height: 100%;
-				}
-
-				#logo {
-					color: white;
-					font-family: 'Roboto Mono', monospace;
-					font-size: 20px;
-					line-height: 44px;
-					margin-left: 60px;
-					position: relative;
-					display: inline-block;
-				}
-
-				#logo #text {
-					display: inline-block;
-					position: relative;
-				}
-
-				#logo canvas {
-					position: absolute;
-					right: -1px;
-					background-color: #F734D7;
-					height: 26px;
-					width: 26px;
-					top: 10px;
-				}
+				// #container {
+				// 	background-color: black;
+				// 	width: 100%;
+				// 	height: 100%;
+				// }
 
 				tone-unmute {
 					position: fixed;
@@ -7138,10 +7115,6 @@
 			</style>
 			<tone-unmute></tone-unmute>
 			<div id="container">
-				<a id="logo" href="https://tonejs.github.io">
-					<canvas></canvas>
-					<div id="text">Tone.js</div>
-				</a>
 			</div>
 		`}});customElements.define("tone-content",class extends i.a{render(){return i.b`
 			<style>
@@ -7151,10 +7124,13 @@
 					width: 100%;
 				}
 				#content {
-					width: 80%;
+                    width: 80%;
+                    position:relative;
+                    top:550px;
 					min-width: 320px;
-					max-width: 600px;
-					margin: 40px auto 60px;
+					max-width: 800px;
+                    // margin-top: 200px;
+                    margin:0 auto;
 				}
 
 			</style>
@@ -7454,64 +7430,64 @@
 			</div>
 		`}});customElements.define("tone-example",class extends i.a{static get properties(){return{collapsed:{type:Boolean},open:{type:Boolean}}}constructor(){super(),this.collapsed=!0}updated(t){t.has("open")&&(this.collapsed=!this.open)}render(){return i.b`
 			<style>
-				:host {
-					display: inline-block;
-					--top-bar-height: 44px;
-				}
+				// :host {
+				// 	display: inline-block;
+				// 	--top-bar-height: 44px;
+				// }
 
-				#container {
-					position: absolute;
-					top: 0px;
-					left: 0px;
-					width: 100%;
-					height: 100%;
-				}
+				// #container {
+				// 	position: absolute;
+				// 	top: 0px;
+				// 	left: 0px;
+				// 	width: 100%;
+				// 	height: 100%;
+				// }
 
-				#container[collapsed]{
-					--side-panel-width : 0px;
-				}
+				// #container[collapsed]{
+				// 	--side-panel-width : 0px;
+				// }
 
-				#container[collapsed] tone-side-panel {
-					position: absolute;
-				}
+				// #container[collapsed] tone-side-panel {
+				// 	position: absolute;
+				// }
 
-				tone-side-panel {
-					position: fixed;
-					height: 100%;
-					top: 0px;
-					z-index: 2;
-					transition: all var(--side-panel-transition);
-					// top: var(--top-bar-height);
-					// height: calc(100% - var(--top-bar-height));
-				}
+				// tone-side-panel {
+				// 	position: fixed;
+				// 	height: 100%;
+				// 	top: 0px;
+				// 	z-index: 2;
+				// 	transition: all var(--side-panel-transition);
+				// 	// top: var(--top-bar-height);
+				// 	// height: calc(100% - var(--top-bar-height));
+				// }
 
-				tone-top-bar {
-					width: 100%;
-					right: 0px;
-				}
+				// tone-top-bar {
+				// 	width: 100%;
+				// 	right: 0px;
+				// }
 
-				#main {
-					--margin: 4px;
-					transition: width var(--side-panel-transition);
-					display: inline-block;
-					width: calc(100% - var(--side-panel-width) - var(--margin) * 2);
-					right: var(--margin);
-					top: var(--margin);
-					position: absolute;
-				}
+				// #main {
+				// 	--margin: 4px;
+				// 	transition: width var(--side-panel-transition);
+				// 	display: inline-block;
+				// 	width: calc(100% - var(--side-panel-width) - var(--margin) * 2);
+				// 	right: var(--margin);
+				// 	top: var(--margin);
+				// 	position: absolute;
+				// }
 
-				::slotted(tone-drawer){
-					width: calc(100% - var(--side-panel-width));
-					transition: width var(--side-panel-transition);
-					right: 0px;
-					left: unset;
-				}
+				// ::slotted(tone-drawer){
+				// 	width: calc(100% - var(--side-panel-width));
+				// 	transition: width var(--side-panel-transition);
+				// 	right: 0px;
+				// 	left: unset;
+				// }
 
-				@media only screen and (max-width: 700px) {
-					#main {
-						width: calc(100% - var(--margin) * 2);
-					}
-				}
+				// @media only screen and (max-width: 700px) {
+				// 	#main {
+				// 		width: calc(100% - var(--margin) * 2);
+				// 	}
+				// }
 			</style>
 			<div id="container" ?collapsed=${this.collapsed}>
 				<tone-side-panel
@@ -7527,15 +7503,15 @@
 			<style>
 
 				:host, #container, canvas {
-					// width: 100%;
-					// height: 100%;
+					width: 100%;
+					height: 50%;
 					position: absolute;
-					top: 0px;
+					top: 50%;
 					left: 0px;
 				}
 
 				#container {
-					background-color: var(--color-magenta);
+					background-color: var(--white);
 				}
 
 			</style>
@@ -7599,33 +7575,41 @@
 					${et}
 				</button>
 			</div>
-		`}});customElements.define("tone-demo",class extends i.a{static get properties(){return{autoplay:{type:Boolean}}}firstUpdated(){super.firstUpdated(),this.shadowRoot.querySelector("tone-waveform").bind(Tone.Master)}render(){return i.b`
+		`}});
+        customElements.define("tone-demo",class extends i.a{
+            static get properties(){
+                return{autoplay:{type:Boolean}}}
+        firstUpdated(){
+            super.firstUpdated(),
+            this.shadowRoot.querySelector("tone-waveform").bind(Tone.Master)}
+        render(){return i.b`
 			<style>
 
 				:host, #container, tone-waveform {
-					width: 100%;
-					height: 100%;
-					position: absolute;
-					top: 0px;
-					left: 0px;
+					// width: 100%;
+					// height: 100%;
+					// position: absolute;
+					// top: 0px;
+                    // left: 0px;
+
 				}
 
 				tone-waveform {
-					z-index: 0;
+					z-index: -20;
 				}
 
 				#content {
 					position: relative;
-					width: 80%;
+					width: 100%;
 					min-width: 200px;
 					max-width: 400px;
 					margin: 40px auto 0px;
 					z-index: 1;
 				}
 
-				tone-unmute {
-					z-index: 10;
-				}
+				// tone-unmute {
+				// 	z-index: 10;
+				// }
 
 				::slotted(tone-trigger), ::slotted(tone-button), ::slotted(tone-play-toggle), ::slotted(tone-slider){
 					width: 100%;
